@@ -1,4 +1,4 @@
-const tableModel = require("../routes/providers/providersTable")
+const tableModel = require("../routes/providers/providersTableModel")
 
 tableModel
   .sync()

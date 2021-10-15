@@ -4,15 +4,15 @@ const instance = require("../../database/connection")
 const columns = {
   company: {
     type: sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   email: {
     type: sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   category: {
     type: sequelize.ENUM("ração", "brinquedos"),
-    allowNull: false,
+    allowNull: true,
   },
 }
 

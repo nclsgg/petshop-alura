@@ -1,8 +1,11 @@
 const customExpress = require("./config/customExpress")
+const config = require("config")
+
+const router = require("./routes/providers")
 
 const app = customExpress()
 
-app.listen(3000, (error) => {
+app.listen(config.get("api.port"), (error) => {
   if (error) {
     console.log(error)
   } else {
@@ -11,5 +14,7 @@ app.listen(3000, (error) => {
     app.get("/", (req, res) => {
       res.send("Você está usando o método GET")
     })
+
+    app.use("/api/providers", router)
   }
 })

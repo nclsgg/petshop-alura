@@ -47,4 +47,19 @@ router.patch("/:id", async (req, res) => {
   }
 })
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const id = requisição.params.id
+    const provider = new Provider({ id: id })
+    await provider.load()
+  } catch (error) {
+    res.send(
+      JSON.stringify({
+        message: error.message,
+      })
+    )
+  }
+  provider.delete()
+})
+
 module.exports = router

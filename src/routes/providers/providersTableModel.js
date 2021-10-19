@@ -1,28 +1,28 @@
-const sequelize = require("sequelize")
-const instance = require("../../database/connection")
+const sequelize = require('sequelize')
+const instance = require('../../database/connection')
 
 const columns = {
   company: {
     type: sequelize.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   email: {
     type: sequelize.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   category: {
-    type: sequelize.ENUM("ração", "brinquedos"),
-    allowNull: true,
+    type: sequelize.ENUM('ração', 'brinquedos'),
+    allowNull: false,
   },
 }
 
 const options = {
   freezeTableName: true,
-  tableName: "providers",
+  tableName: 'providers',
   timestamps: true,
-  createdAt: "createdAt",
-  updatedAt: "updatedAt",
-  version: "version",
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  version: 'version',
 }
 
-module.exports = instance.define("provider", columns, options)
+module.exports = instance.define('provider', columns, options)

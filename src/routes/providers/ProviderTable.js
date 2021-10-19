@@ -1,4 +1,4 @@
-const Model = require("./providersTableModel")
+const Model = require('./providersTableModel')
 
 module.exports = {
   insert(provider) {
@@ -13,7 +13,7 @@ module.exports = {
     })
 
     if (!foundedProvider) {
-      throw new Error("Fornecedor não encontrado")
+      throw new Error('Fornecedor não encontrado')
     }
 
     return foundedProvider
@@ -21,6 +21,12 @@ module.exports = {
 
   async update(id, updateData) {
     return Model.update(updateData, {
+      where: { id: id },
+    })
+  },
+
+  delete(id) {
+    return Model.destroy({
       where: { id: id },
     })
   },

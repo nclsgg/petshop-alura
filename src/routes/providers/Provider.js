@@ -1,4 +1,4 @@
-const ProviderTable = require("./ProviderTable")
+const ProviderTable = require('./ProviderTable')
 
 class Provider {
   constructor({ id, company, email, category, createdAt, updatedAt, version }) {
@@ -12,6 +12,7 @@ class Provider {
   }
 
   async create() {
+    this.validate()
     const result = await ProviderTable.insert({
       company: this.company,
       email: this.email,
@@ -35,22 +36,39 @@ class Provider {
   }
 
   async update() {
+    this.validate()
     await ProviderTable.searchById(this.id)
-    const fields = ["company", "email", "category"]
+    const fields = ['company', 'email', 'category']
     const updateData = {}
 
     fields.forEach((field) => {
       const value = this[field]
-      if (typeof value === "string" && value.length > 0) {
+      if (typeof value === 'string' && value.length > 0) {
         updateData[field] = value
       }
     })
 
     if (Object.keys(updateData).length === 0) {
-      throw new Error("Não foram fornecidos dados para atualizar!")
+      throw new Error('Não foram fornecidos dados para atualizar!')
     }
 
     await ProviderTable.update(this.id, updateData)
+  }
+
+  delete() {
+    return ProviderTable.delete(this.id)
+  }
+
+  validate() {
+    const fields = ['company', 'email', 'category']
+
+    fields.forEach((field) => {
+      const value = this[field]
+
+      if (typeof value !== 'string' || value.length === 0) {
+        throw new Error(`O campo '${field}' é inválido`)
+      }
+    })
   }
 }
 

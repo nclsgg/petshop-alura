@@ -1,20 +1,29 @@
-const router = require("express").Router()
-const tableModel = require("./providersTableModel")
-const Provider = require("./Provider")
+const router = require('express').Router()
+const tableModel = require('./providersTableModel')
+const Provider = require('./Provider')
+const { response } = require('express')
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   const results = await tableModel.findAll()
   res.send(JSON.stringify(results))
 })
 
-router.post("/", async (req, res) => {
-  const dataReceived = req.body
-  const provider = new Provider(dataReceived)
-  await provider.create()
-  res.send(JSON.stringify(provider))
+router.post('/', async (req, res) => {
+  try {
+    const dataReceived = req.body
+    const provider = new Provider(dataReceived)
+    await provider.create()
+    res.send(JSON.stringify(provider))
+  } catch (error) {
+    res.send(
+      JSON.stringify({
+        message: error.message,
+      })
+    )
+  }
 })
 
-router.get("/:id", async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const id = req.params.id
     const provider = new Provider({ id: id })
@@ -29,7 +38,7 @@ router.get("/:id", async (req, res) => {
   }
 })
 
-router.patch("/:id", async (req, res) => {
+router.patch('/:id', async (req, res) => {
   try {
     const id = req.params.id
     const dataReceived = req.body
@@ -37,7 +46,7 @@ router.patch("/:id", async (req, res) => {
     const provider = new Provider(data)
 
     await provider.update()
-    res.send("Fornecedor atualizado: " + JSON.stringify(provider))
+    res.send('Fornecedor atualizado: ' + JSON.stringify(provider))
   } catch (error) {
     res.send(
       JSON.stringify({
@@ -47,11 +56,14 @@ router.patch("/:id", async (req, res) => {
   }
 })
 
-router.delete("/:id", async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
-    const id = requisição.params.id
+    const id = req.params.id
     const provider = new Provider({ id: id })
     await provider.load()
+    await provider.delete()
+    res.send('Fornecedor deletado')
+    res.end()
   } catch (error) {
     res.send(
       JSON.stringify({
@@ -59,7 +71,6 @@ router.delete("/:id", async (req, res) => {
       })
     )
   }
-  provider.delete()
 })
 
 module.exports = router

@@ -1,10 +1,13 @@
 const router = require('express').Router()
 const tableModel = require('./providersTableModel')
 const Provider = require('./Provider')
+const ProviderSerializer = require('../../serializer').ProviderSerializer
 
 router.get('/', async (req, res) => {
   const results = await tableModel.findAll()
-  res.status(200).send(JSON.stringify(results))
+  res.status(200)
+  const serializer = new ProviderSerializer(res.getHeader('Content-Type'))
+  res.send(serializer.serialize(results))
 })
 
 router.post('/', async (req, res, next) => {
@@ -12,7 +15,9 @@ router.post('/', async (req, res, next) => {
     const dataReceived = req.body
     const provider = new Provider(dataReceived)
     await provider.create()
-    res.status(201).send(JSON.stringify(provider))
+    res.status(201)
+    const serializer = new ProviderSerializer(res.getHeader('Content-Type'))
+    res.send(serializer.serialize(provider))
   } catch (error) {
     next(error)
   }
@@ -23,7 +28,9 @@ router.get('/:id', async (req, res, next) => {
     const id = req.params.id
     const provider = new Provider({ id: id })
     await provider.load()
-    res.status(200).send(JSON.stringify(provider))
+    res.status(200)
+    const serializer = new ProviderSerializer(res.getHeader('Content-Type'))
+    res.send(serializer.serialize(provider))
   } catch (error) {
     next(error)
   }
@@ -37,7 +44,7 @@ router.patch('/:id', async (req, res, next) => {
     const provider = new Provider(data)
 
     await provider.update()
-    res.status(201).send('Fornecedor atualizado: ' + JSON.stringify(provider))
+    res.status(201).end()
   } catch (error) {
     next(error)
   }

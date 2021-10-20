@@ -6,10 +6,28 @@ const NotFounded = require('./errors/NotFounded')
 const InvalidField = require('./errors/InvalidField')
 const DataDidntProvided = require('./errors/DataDidntProvided')
 const InvalidValue = require('./errors/InvalidValue')
+const acceptedFormats = require('./serializer').acceptedFormats
 
 const app = customExpress()
 
-app.use((error, req, res, send) => {
+app.use((req, res, next) => {
+  let reqFormat = req.header('Accept')
+
+  if (reqFormat === '*/*') {
+    reqFormat = 'application/json'
+  }
+
+  if (acceptedFormats.indexOf(reqFormat) === -1) {
+    res.status(406)
+    res.end
+    return
+  }
+
+  res.setHeader('Content-Type', reqFormat)
+  next()
+})
+
+app.use((error, req, res, next) => {
   let status = 500
 
   if (error instanceof NotFounded) {
@@ -32,6 +50,7 @@ app.use((error, req, res, send) => {
       id: error.errorId,
     })
   )
+  next()
 })
 
 app.listen(config.get('api.port'), (error) => {

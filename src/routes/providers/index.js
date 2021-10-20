@@ -1,44 +1,35 @@
 const router = require('express').Router()
 const tableModel = require('./providersTableModel')
 const Provider = require('./Provider')
-const { response } = require('express')
 
 router.get('/', async (req, res) => {
   const results = await tableModel.findAll()
   res.status(200).send(JSON.stringify(results))
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     const dataReceived = req.body
     const provider = new Provider(dataReceived)
     await provider.create()
     res.status(201).send(JSON.stringify(provider))
   } catch (error) {
-    res.send(
-      JSON.stringify({
-        message: error.message,
-      })
-    )
+    next(error)
   }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const id = req.params.id
     const provider = new Provider({ id: id })
     await provider.load()
     res.status(200).send(JSON.stringify(provider))
   } catch (error) {
-    res.send(
-      JSON.stringify({
-        message: error.message,
-      })
-    )
+    next(error)
   }
 })
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', async (req, res, next) => {
   try {
     const id = req.params.id
     const dataReceived = req.body
@@ -48,15 +39,11 @@ router.patch('/:id', async (req, res) => {
     await provider.update()
     res.status(201).send('Fornecedor atualizado: ' + JSON.stringify(provider))
   } catch (error) {
-    res.send(
-      JSON.stringify({
-        message: error.message,
-      })
-    )
+    next(error)
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const id = req.params.id
     const provider = new Provider({ id: id })
@@ -64,11 +51,7 @@ router.delete('/:id', async (req, res) => {
     await provider.delete()
     res.status(204).end()
   } catch (error) {
-    res.send(
-      JSON.stringify({
-        message: error.message,
-      })
-    )
+    next(error)
   }
 })
 

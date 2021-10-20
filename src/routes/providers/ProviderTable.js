@@ -1,4 +1,5 @@
 const Model = require('./providersTableModel')
+const NotFounded = require('../../errors/NotFounded')
 
 module.exports = {
   insert(provider) {
@@ -13,7 +14,7 @@ module.exports = {
     })
 
     if (!foundedProvider) {
-      throw new Error('Fornecedor não encontrado')
+      throw new NotFounded()
     }
 
     return foundedProvider

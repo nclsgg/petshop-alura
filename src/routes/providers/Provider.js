@@ -1,3 +1,6 @@
+const { response } = require('express')
+const DataDidntProvided = require('../../errors/DataDidntProvided')
+const InvalidField = require('../../errors/InvalidField')
 const ProviderTable = require('./ProviderTable')
 
 class Provider {
@@ -49,7 +52,7 @@ class Provider {
     })
 
     if (Object.keys(updateData).length === 0) {
-      throw new Error('Não foram fornecidos dados para atualizar!')
+      throw new DataDidntProvided()
     }
 
     await ProviderTable.update(this.id, updateData)
@@ -66,7 +69,7 @@ class Provider {
       const value = this[field]
 
       if (typeof value !== 'string' || value.length === 0) {
-        throw new Error(`O campo '${field}' é inválido`)
+        throw new InvalidField(field)
       }
     })
   }

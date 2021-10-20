@@ -7,6 +7,7 @@ const InvalidField = require('./errors/InvalidField')
 const DataDidntProvided = require('./errors/DataDidntProvided')
 const InvalidValue = require('./errors/InvalidValue')
 const acceptedFormats = require('./serializer').acceptedFormats
+const ErrorSerializer = require('./serializer').ErrorSerializer
 
 const app = customExpress()
 
@@ -44,8 +45,9 @@ app.use((error, req, res, next) => {
 
   res.status(status)
 
+  const serializer = new ErrorSerializer(res.getHeader('Content-Type'))
   res.send(
-    JSON.stringify({
+    serializer.serialize({
       message: error.message,
       id: error.errorId,
     })

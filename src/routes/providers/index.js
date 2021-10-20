@@ -5,7 +5,7 @@ const { response } = require('express')
 
 router.get('/', async (req, res) => {
   const results = await tableModel.findAll()
-  res.send(JSON.stringify(results))
+  res.status(200).send(JSON.stringify(results))
 })
 
 router.post('/', async (req, res) => {
@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
     const dataReceived = req.body
     const provider = new Provider(dataReceived)
     await provider.create()
-    res.send(JSON.stringify(provider))
+    res.status(201).send(JSON.stringify(provider))
   } catch (error) {
     res.send(
       JSON.stringify({
@@ -28,7 +28,7 @@ router.get('/:id', async (req, res) => {
     const id = req.params.id
     const provider = new Provider({ id: id })
     await provider.load()
-    res.send(JSON.stringify(provider))
+    res.status(200).send(JSON.stringify(provider))
   } catch (error) {
     res.send(
       JSON.stringify({
@@ -46,7 +46,7 @@ router.patch('/:id', async (req, res) => {
     const provider = new Provider(data)
 
     await provider.update()
-    res.send('Fornecedor atualizado: ' + JSON.stringify(provider))
+    res.status(201).send('Fornecedor atualizado: ' + JSON.stringify(provider))
   } catch (error) {
     res.send(
       JSON.stringify({
@@ -62,8 +62,7 @@ router.delete('/:id', async (req, res) => {
     const provider = new Provider({ id: id })
     await provider.load()
     await provider.delete()
-    res.send('Fornecedor deletado')
-    res.end()
+    res.status(204).end()
   } catch (error) {
     res.send(
       JSON.stringify({

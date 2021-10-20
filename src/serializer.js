@@ -7,7 +7,7 @@ class Serializer {
 
   serialize(data) {
     if (this.contentType === 'application/json') {
-      return this.json(this.filterObjects(data))
+      return this.json(this.filter(data))
     }
 
     throw new InvalidValue(this.contentType)
@@ -23,6 +23,18 @@ class Serializer {
     })
 
     return newObject
+  }
+
+  filter(data) {
+    if (Array.isArray(data)) {
+      data = data.map((item) => {
+        return this.filterObjects(item)
+      })
+    } else {
+      data = this.filterObjects(data)
+    }
+
+    return data
   }
 }
 

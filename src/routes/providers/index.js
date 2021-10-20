@@ -4,7 +4,7 @@ const Provider = require('./Provider')
 const ProviderSerializer = require('../../serializer').ProviderSerializer
 
 router.get('/', async (req, res) => {
-  const results = await tableModel.findAll()
+  const results = await tableModel.findAll({ raw: true })
   res.status(200)
   const serializer = new ProviderSerializer(res.getHeader('Content-Type'))
   res.send(serializer.serialize(results))
